@@ -1,0 +1,8 @@
+
+github "radex/SwiftyUserDefaults"
+github "ReactiveX/RxSwift" ~> 3.0
+github "SwiftyBeaver/SwiftyBeaver"
+github "hyperoslo/Cache"
+github "Alamofire/Alamofire" ~> 4.4
+github "kishikawakatsumi/KeychainAccess"
+github "Hearst-DD/ObjectMapper" ~> 2.2
