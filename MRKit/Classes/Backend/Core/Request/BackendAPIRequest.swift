@@ -16,6 +16,7 @@ protocol BackendAPIRequest {
     var parameters: [String: AnyObject]? { get }
     var headers: [String: String]? { get }
     var authRequired: Bool {get}
+    var miltiPartData: [String : NetworkService.MultiPartData]? { get }
 }
 
 extension BackendAPIRequest {
@@ -25,5 +26,9 @@ extension BackendAPIRequest {
     
     var authRequired: Bool {
         return false
+    }
+    
+    var miltiPartData: [String : NetworkService.MultiPartData]? {
+        return nil
     }
 }

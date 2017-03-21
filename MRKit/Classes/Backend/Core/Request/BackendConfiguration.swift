@@ -13,11 +13,16 @@ public final class BackendConfiguration {
     let baseURL: URL
     var accessToken: String?
     var currentUserId: String?
+    var converter: BackendResponseConverter
+    var accessTokenConfiguration: BackendTokenConfiguration
     
-    public init(baseURL: URL) {
+    public init(baseURL: URL,
+                converter: BackendResponseConverter,
+                accessTokenConfiguration: BackendTokenConfiguration = BackendTokenConfiguration()) {
         self.baseURL = baseURL
+        self.converter = converter
+        self.accessTokenConfiguration = accessTokenConfiguration
     }
     
     public static var shared: BackendConfiguration!
-    
 }
