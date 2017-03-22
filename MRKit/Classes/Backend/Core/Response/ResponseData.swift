@@ -16,11 +16,26 @@ public class ResponseData: CustomDebugStringConvertible, Equatable {
     public let request: URLRequest?
     public let response: URLResponse?
     
+    /// ResponseData initialisation
+    /// - parameter statusCode: code of response
+    /// - parameter data: processed response data
+    /// - parameter request: URLRequest
+    /// - parameter response: URLResponse
     public init(statusCode: Int, data: AnyObject, request: URLRequest? = nil, response: URLResponse? = nil) {
         self.statusCode = statusCode
         self.data = data
         self.request = request
         self.response = response
+    }
+    
+    /// ResponseData initialisation
+    /// - parameter networkResponse: NetworkService response
+    /// - parameter data: processed response data
+    public init(from networkResponse: NetworkService.NetworkResponse, data: AnyObject) {
+        self.statusCode = networkResponse.1
+        self.data = data
+        self.request = networkResponse.3
+        self.response = networkResponse.2
     }
     
     /// A text description of the `Response`.

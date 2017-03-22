@@ -29,40 +29,95 @@ class BackendService: Loggable {
         
         var url = conf.baseURL.appendingPathComponent(request.apiVersion)
         url = url.appendingPathComponent(request.endpoint)
-        let headers = request.headers
         
-        var requestParams = request.parameters!
-        if (request.authRequired) {
-            requestParams["access_token"] = self.conf.accessToken! as AnyObject?
-            requestParams["id_user"] = self.conf.currentUserId! as AnyObject?
+        var headers = request.headers
+        var requestParams = request.parameters
+        
+        if request.commonParamsRequired && requestParams != nil {
+            if let commonParams = self.conf.commonParams {
+                commonParams.forEach {
+                    requestParams?[$0] = $1
+                }
+            }
         }
         
+        if request.commonHeadersRequired && headers != nil {
+            if let commonHeaders = self.conf.commonHeaders {
+                commonHeaders.forEach {
+                    headers?[$0] = $1
+                }
+            }
+        }
+        
+        if request.miltiPartData?.isEmpty == false  {
+            return multipartRequest(request,
+                                    url: url,
+                                    params: requestParams,
+                                    headers: headers)
+        } else {
+            return defaultRequest(request,
+                                  url: url,
+                                  params: requestParams,
+                                  headers: headers)
+        }
+        
+    }
+    
+    fileprivate func defaultRequest(_ request: BackendAPIRequest,
+                                    url: URL,
+                                    params: [String : AnyObject]?,
+                                    headers: [String : String]?) -> Observable<ResponseData> {
         return Observable.create { (subscriber) -> Disposable in
-            self.service.request(url: url, method: request.method, params: requestParams, headers: headers).subscribe { (event) in
+            self.service.request(url: url, method: request.method, params: params, headers: headers).subscribe { (event) in
                 switch event {
                 case .completed:
                     subscriber.on(.completed)
                     break
                 case .next(let data):
-                    let json: AnyObject? = try! JSONSerialization.jsonObject(with: (data.0 as NSData) as Data, options: []) as AnyObject?
-                    self.log(.debug, "Response: \(json)")
-                    
-                    let response = (json! as! [String: AnyObject])["response"]
-                    let error = response!["error"] as! Bool
-                    
-                    if !error {
-                        let result = response?["result"]
-                        let res = ResponseData(statusCode: data.1, data: result as AnyObject, request: data.3, response: data.2)
-                        subscriber.onNext(res)
-                    } else {
-                        subscriber.on(.error(AppError.unexpectedError(message: "Error message from server nil")))
+                    let (response, error) = self.conf.converter.convert(response: data)
+                    if error != nil {
+                        subscriber.on(.error(error!))
+                    } else if response != nil {
+                        subscriber.onNext(response!)
                     }
                     break
                 case .error(let errorType):
                     subscriber.on(.error(errorType))
                     break
                 }
-            }.addDisposableTo(self.disposeBag)
+                }.addDisposableTo(self.disposeBag)
+            return Disposables.create()
+        }
+    }
+    
+    fileprivate func multipartRequest(_ request: BackendAPIRequest,
+                                      url: URL,
+                                      params: [String : AnyObject]?,
+                                      headers: [String : String]?) -> Observable<ResponseData> {
+        return Observable.create { (subscriber) -> Disposable in
+            
+            self.service.upload(data: request.miltiPartData!,
+                                url: url,
+                                method: request.method,
+                                params: params,
+                                headers: headers).subscribe { (event) in
+                                    switch event {
+                                    case .completed:
+                                        subscriber.on(.completed)
+                                        break
+                                    case .next(let data):
+                                        let (response, error) = self.conf.converter.convert(response: data)
+                                        if response != nil {
+                                            subscriber.onNext(response!)
+                                        } else if error != nil {
+                                            subscriber.on(.error(error!))
+                                        }
+                                        break
+                                    case .error(let errorType):
+                                        subscriber.on(.error(errorType))
+                                        break
+                                    }
+                }.addDisposableTo(self.disposeBag)
             return Disposables.create()
         }
     }
@@ -71,3 +126,4 @@ class BackendService: Loggable {
         service.cancel()
     }
 }
+
