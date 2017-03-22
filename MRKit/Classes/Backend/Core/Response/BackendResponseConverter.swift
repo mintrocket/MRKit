@@ -8,7 +8,16 @@
 
 import Foundation
 
+/// Protocol of convert NetworkResponse to pair (ResponseData?, Error?).
+///
+/// This protocol required for initialisation of BackendConfiguration
+/// and response processing
+///
+/// For example see JsonResponseConverter
 public protocol BackendResponseConverter: class {
+    /// Convert NetworkResponse to pair (ResponseData?, Error?)
+    /// - parameter data: Response from NetworkService
+    /// - returns: (ResponseData?, Error?)
     func convert(response data: NetworkService.NetworkResponse) -> (ResponseData?, Error?)
 }
 
@@ -27,7 +36,8 @@ public class JsonResponseConverter: BackendResponseConverter, Loggable {
             return (nil,AppError.networkError(code: MRKitErrorCode.emptyResponse))
         }
         let response = json! as! [String: AnyObject]
-        let res = ResponseData(statusCode: data.1, data: response as AnyObject, request: data.3, response: data.2)
+        
+        let res = ResponseData(from: data, data: response as AnyObject)
         return (res, nil)
     }
 }

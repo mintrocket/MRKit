@@ -8,21 +8,36 @@
 
 import Foundation
 
+
+///Configuration of BackendService
 public final class BackendConfiguration {
-    
+    /// Url of API Server
     let baseURL: URL
-    var accessToken: String?
-    var currentUserId: String?
-    var converter: BackendResponseConverter
-    var accessTokenConfiguration: BackendTokenConfiguration
     
+    /// Server response converter
+    var converter: BackendResponseConverter
+    
+    /// Headers passed to the server by default for all requests
+    /// Example, you can pass token:
+    /// - commonHeaders = ["token": "TOKEN_VALUE", ...]
+    /// The need to send is determined by the BackendAPIRequest
+    var commonHeaders: [String : String]?
+    
+    /// Parameters passed to the server by default for all requests
+    /// Example, you can pass token:
+    /// - commonHeaders = ["token": "TOKEN_VALUE", ...]
+    /// The need to send is determined by the BackendAPIRequest
+    var commonParams: [String : AnyObject]?
+    
+    /// Initialisation of BackendConfiguration
+    /// - parameter baseURL: Url of API Server
+    /// - parameter converter: Server response converter
     public init(baseURL: URL,
-                converter: BackendResponseConverter,
-                accessTokenConfiguration: BackendTokenConfiguration = BackendTokenConfiguration()) {
+                converter: BackendResponseConverter) {
         self.baseURL = baseURL
         self.converter = converter
-        self.accessTokenConfiguration = accessTokenConfiguration
     }
     
+    /// Shared instance
     public static var shared: BackendConfiguration!
 }

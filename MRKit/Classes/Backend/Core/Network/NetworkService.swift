@@ -57,15 +57,13 @@ open class NetworkService: Loggable {
             self.log(.debug, "Request: \(request)")
             self.task = request.task
             request.response(completionHandler: { (response) in
-                if (response.response != nil) {
+                if (response.error != nil) {
+                    observer.on(.error(response.error!))
+                } else if (response.response != nil) {
                     observer.on(.next((response.data!,response.response!.statusCode, response.response, response.request)))
                     observer.on(.completed)
                 } else {
-                    if (response.error != nil) {
-                        observer.on(.error(response.error!))
-                    } else {
-                        observer.on(.error(AppError.networkError(code: -500)))
-                    }
+                    observer.on(.error(AppError.networkError(code: MRKitErrorCode.unknownNetworkError)))
                 }
             })
             return Disposables.create()
@@ -105,16 +103,13 @@ open class NetworkService: Loggable {
                     self.task = request.task
                     
                     request.response(completionHandler: { (response) in
-                        if (response.response != nil) {
+                        if (response.error != nil) {
+                            observer.on(.error(response.error!))
+                        } else if (response.response != nil) {
                             observer.on(.next((response.data!,response.response!.statusCode, response.response, response.request)))
                             observer.on(.completed)
                         } else {
-                            if (response.error != nil) {
-                                observer.on(.error(response.error!))
-                            } else {
-                                observer.on(.error(AppError.networkError(code: -500)))
-                            }
-                            
+                            observer.on(.error(AppError.networkError(code: MRKitErrorCode.unknownNetworkError)))
                         }
                     })
                     break

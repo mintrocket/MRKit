@@ -33,21 +33,23 @@ class BackendService: Loggable {
         var headers = request.headers
         var requestParams = request.parameters
         
-        if (request.authRequired) {
-            if let token = self.conf.accessToken {
-                let conf = self.conf.accessTokenConfiguration
-                switch conf.place {
-                case .params:
-                    requestParams?[conf.key] = token as AnyObject?
-                    break
-                case .headers:
-                    headers?[conf.key] = token
-                    break
+        if request.commonParamsRequired && requestParams != nil {
+            if let commonParams = self.conf.commonParams {
+                commonParams.forEach {
+                    requestParams?[$0] = $1
                 }
             }
         }
         
-        if request.miltiPartData != nil {
+        if request.commonHeadersRequired && headers != nil {
+            if let commonHeaders = self.conf.commonHeaders {
+                commonHeaders.forEach {
+                    headers?[$0] = $1
+                }
+            }
+        }
+        
+        if request.miltiPartData?.isEmpty == false  {
             return multipartRequest(request,
                                     url: url,
                                     params: requestParams,
