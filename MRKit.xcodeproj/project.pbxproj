@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		461B7C8D1E80F01200398D16 /* BackendResponseConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461B7C8C1E80F01200398D16 /* BackendResponseConverter.swift */; };
 		461B7C8F1E80F24C00398D16 /* ErrorCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461B7C8E1E80F24C00398D16 /* ErrorCodes.swift */; };
+		4637F8801ED540F0007394E3 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4637F87F1ED540F0007394E3 /* KeychainStore.swift */; };
 		CC6E0E0E1E70650E0012FE6A /* AccountStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC6E0DE71E70650E0012FE6A /* AccountStore.swift */; };
 		CC6E0E0F1E70650E0012FE6A /* AuthKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC6E0DE81E70650E0012FE6A /* AuthKit.swift */; };
 		CC6E0E101E70650E0012FE6A /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC6E0DE91E70650E0012FE6A /* CurrentUser.swift */; };
@@ -50,6 +51,7 @@
 /* Begin PBXFileReference section */
 		461B7C8C1E80F01200398D16 /* BackendResponseConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackendResponseConverter.swift; sourceTree = "<group>"; };
 		461B7C8E1E80F24C00398D16 /* ErrorCodes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorCodes.swift; sourceTree = "<group>"; };
+		4637F87F1ED540F0007394E3 /* KeychainStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		CC6E0DE71E70650E0012FE6A /* AccountStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountStore.swift; sourceTree = "<group>"; };
 		CC6E0DE81E70650E0012FE6A /* AuthKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthKit.swift; sourceTree = "<group>"; };
 		CC6E0DE91E70650E0012FE6A /* CurrentUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentUser.swift; sourceTree = "<group>"; };
@@ -129,9 +131,10 @@
 		CC6E0DE61E70650E0012FE6A /* Auth */ = {
 			isa = PBXGroup;
 			children = (
-				CC6E0DE71E70650E0012FE6A /* AccountStore.swift */,
 				CC6E0DE81E70650E0012FE6A /* AuthKit.swift */,
 				CC6E0DE91E70650E0012FE6A /* CurrentUser.swift */,
+				4637F87F1ED540F0007394E3 /* KeychainStore.swift */,
+				CC6E0DE71E70650E0012FE6A /* AccountStore.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -415,6 +418,7 @@
 				CC6E0E121E70650E0012FE6A /* DictionaryExtension.swift in Sources */,
 				CC6E0E101E70650E0012FE6A /* CurrentUser.swift in Sources */,
 				CC6E0E151E70650E0012FE6A /* BackendAPIRequest.swift in Sources */,
+				4637F8801ED540F0007394E3 /* KeychainStore.swift in Sources */,
 				CC6E0E211E70650E0012FE6A /* UIImageExtension.swift in Sources */,
 				CC6E0E261E70650E0012FE6A /* Settings.swift in Sources */,
 				461B7C8D1E80F01200398D16 /* BackendResponseConverter.swift in Sources */,

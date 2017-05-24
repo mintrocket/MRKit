@@ -7,105 +7,107 @@
 //
 
 import Foundation
-import KeychainAccess
-import SwiftyUserDefaults
 
-private let UserDataKey = DefaultsKey<[String : Any]>("UserDataKey")
+public class AccessStore: KeychainStore {
 
-public class AccessStore: AccountStore, Loggable {
+    private static let accountItemsKey = "user_data_items"
 
-    
-    public var defaultLoggingTag: LogTag {
-        return .Service
+    public var storableProperties: [String] = []
+
+    public init(storeName: String, storableProperties: [String]) {
+        super.init(storeName: storeName)
+        self.storableProperties = storableProperties
     }
     
-    static let accessTokenKey = "ACCESS_TOKEN"
-    static let loginKey = "LOGIN"
-    
-    public var storeName: String
-    public var type: AccountStoreType
-    
-    required public init(type: AccountStoreType, storeName: String) {
-        self.storeName = storeName
-        self.type = type
+    required public init(storeName: String) {
+        super.init(storeName: storeName)
     }
-    
-    public func fetchAccount(type: AccountType.Type, service: String) -> AccountType? {
-        self.log(.debug, "Fetch account for service: \(service)")
-        let keychain = self.keychain(service: service)
-        let login = keychain[AccessStore.loginKey]
-        let accessToken = keychain[AccessStore.accessTokenKey]
-        
-        if (login == nil || accessToken == nil) {
-            return nil
-        }
-        let user = type.init()
-        user.login = login!
-        user.accessToken = accessToken!
-        switch self.type {
-        case .Keychain:
-            self.log(.debug, "Successful account fetching")
-            return user
-        case .UserDefaults:
+
+    public override func fetchAccount<T>(type: T.Type) -> T? where T : AccountType {
+        if let user = super.fetchAccount(type: type) {
             if let user = self.loadStoredProperties(account: user) {
-                self.log(.debug, "Successful account fetching")
+                self.log(.debug, "Successful account step 2 fetching")
                 return user
             }
-            self.log(.debug, "Fail account fetching")
-            return nil
         }
+
+        self.log(.debug, "Fail account step 2 fetching")
+        return nil
     }
-    
-    public func storeAccount(account: AccountType, service: String) {
-        let keychain = self.keychain(service: service)
-        keychain[AccessStore.loginKey] = account.login
-        keychain[AccessStore.accessTokenKey] = account.accessToken
-        switch self.type {
-        case .Keychain:
-            self.log(.debug, "Successful store account")
-            break
-        case .UserDefaults:
-            self.storeProperties(account: account)
-            self.log(.debug, "Successful store account")
-            break
-        }
+
+    public override func storeAccount<T>(account: T) where T : AccountType {
+        self.storeProperties(account: account)
+        super.storeAccount(account: account)
     }
-    
-    public func clearAccount(service: String) {
-        try! self.keychain(service: service).removeAll()
-        self.storedUserData = [:]
+
+    public override func clearAccount() {
+        super.clearAccount()
+        self.storedUserData = []
     }
-    
-    
-    public func keychain(service: String) -> Keychain {
-        return Keychain(service: service)
-    }
-    
+
     //MARK: - UserDefaults
-    
-    private func storeProperties(account: AccountType) {
-        let properties = account.getStorableProperties()
+
+    private func storeProperties<T>(account: T) {
+        let properties = self.storableProperties
         if properties.count > 0 {
-            self.storedUserData = account.dictionaryWithValues(forKeys: properties)
+            if let account = account as? NSObject {
+                self.storedUserData = account.dictionaryWithValues(forKeys: properties).map(StorableItem.init)
+            }
         }
     }
-    
-    private var storedUserData: [String : Any] {
+
+    private var storedUserData: [StorableItem] {
         get {
-            return Defaults[UserDataKey]
+            let userDefaults = UserDefaults.standard
+            if let decoded  = userDefaults.object(forKey: AccessStore.accountItemsKey) as? Data,
+                let decodedItems = NSKeyedUnarchiver.unarchiveObject(with: decoded) as? [StorableItem] {
+                return decodedItems
+            }
+
+            return []
         }
         set {
-            Defaults[UserDataKey] = newValue
+            let userDefaults = UserDefaults.standard
+            let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: newValue)
+            userDefaults.set(encodedData, forKey: AccessStore.accountItemsKey)
+            userDefaults.synchronize()
         }
     }
-    
-    private func loadStoredProperties(account: AccountType) -> AccountType? {
+
+    private func loadStoredProperties<T>(account: T) -> T? {
+        var dic: [String : Any] = [:]
         let userData = storedUserData
         if userData.count > 0 {
-            account.setValuesForKeys(userData)
-            return account
+            for item in userData {
+                dic[item.key!] = item.value!
+            }
+            if let account = account as? NSObject {
+                account.setValuesForKeys(dic)
+                return account as? T
+            }
         }
         return nil
+    }
+}
+
+fileprivate class StorableItem: NSObject, NSCoding {
+    var key: String?
+    var value: Any?
+
+    init(key: String, value: Any) {
+        self.key = key
+        self.value = value
+    }
+
+    required init(coder decoder: NSCoder) {
+        super.init()
+        self.key = decoder.decodeObject(forKey: "key") as? String
+        self.value = decoder.decodeObject(forKey: "value")
+    }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(key, forKey: "key")
+        coder.encode(value, forKey: "value")
     }
 }
 
