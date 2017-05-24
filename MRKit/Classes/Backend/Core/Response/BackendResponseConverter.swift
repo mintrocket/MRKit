@@ -31,7 +31,7 @@ public class JsonResponseConverter: BackendResponseConverter, Loggable {
             return (nil, AppError.networkError(code: MRKitErrorCode.emptyResponse))
         }
         let json: AnyObject? = try? JSONSerialization.jsonObject(with: data.0, options: []) as AnyObject
-        self.log(.debug, "Response: \(json)")
+        self.log(.debug, "Response: \(String(describing: json))")
         if json == nil {
             return (nil,AppError.networkError(code: MRKitErrorCode.emptyResponse))
         }
