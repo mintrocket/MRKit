@@ -49,7 +49,7 @@ class BackendService: Loggable {
             }
         }
         
-        if request.miltiPartData?.isEmpty == false  {
+        if request.multiPartData?.isEmpty == false  {
             return multipartRequest(request,
                                     url: url,
                                     params: requestParams,
@@ -74,7 +74,12 @@ class BackendService: Loggable {
                     subscriber.on(.completed)
                     break
                 case .next(let data):
-                    let (response, error) = self.conf.converter.convert(response: data)
+                    var (response, error): (ResponseData?, Error?)
+                    if request.customResponseConverter != nil {
+                        (response, error) = request.customResponseConverter!.convert(response: data)
+                    } else {
+                        (response, error) = self.conf.converter.convert(response: data)
+                    }
                     if error != nil {
                         subscriber.on(.error(error!))
                     } else if response != nil {
@@ -96,7 +101,7 @@ class BackendService: Loggable {
                                       headers: [String : String]?) -> Observable<ResponseData> {
         return Observable.create { (subscriber) -> Disposable in
             
-            self.service.upload(data: request.miltiPartData!,
+            self.service.upload(data: request.multiPartData!,
                                 url: url,
                                 method: request.method,
                                 params: params,
@@ -106,7 +111,12 @@ class BackendService: Loggable {
                                         subscriber.on(.completed)
                                         break
                                     case .next(let data):
-                                        let (response, error) = self.conf.converter.convert(response: data)
+                                        var (response, error): (ResponseData?, Error?)
+                                        if request.customResponseConverter != nil {
+                                            (response, error) = request.customResponseConverter!.convert(response: data)
+                                        } else {
+                                            (response, error) = self.conf.converter.convert(response: data)
+                                        }
                                         if response != nil {
                                             subscriber.onNext(response!)
                                         } else if error != nil {

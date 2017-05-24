@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		461B7C8D1E80F01200398D16 /* BackendResponseConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461B7C8C1E80F01200398D16 /* BackendResponseConverter.swift */; };
 		461B7C8F1E80F24C00398D16 /* ErrorCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461B7C8E1E80F24C00398D16 /* ErrorCodes.swift */; };
-		461B7C911E80FA5A00398D16 /* BackendTokenConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461B7C901E80FA5A00398D16 /* BackendTokenConfiguration.swift */; };
 		CC6E0E0E1E70650E0012FE6A /* AccountStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC6E0DE71E70650E0012FE6A /* AccountStore.swift */; };
 		CC6E0E0F1E70650E0012FE6A /* AuthKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC6E0DE81E70650E0012FE6A /* AuthKit.swift */; };
 		CC6E0E101E70650E0012FE6A /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC6E0DE91E70650E0012FE6A /* CurrentUser.swift */; };
@@ -51,7 +50,6 @@
 /* Begin PBXFileReference section */
 		461B7C8C1E80F01200398D16 /* BackendResponseConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackendResponseConverter.swift; sourceTree = "<group>"; };
 		461B7C8E1E80F24C00398D16 /* ErrorCodes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorCodes.swift; sourceTree = "<group>"; };
-		461B7C901E80FA5A00398D16 /* BackendTokenConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackendTokenConfiguration.swift; sourceTree = "<group>"; };
 		CC6E0DE71E70650E0012FE6A /* AccountStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountStore.swift; sourceTree = "<group>"; };
 		CC6E0DE81E70650E0012FE6A /* AuthKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthKit.swift; sourceTree = "<group>"; };
 		CC6E0DE91E70650E0012FE6A /* CurrentUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentUser.swift; sourceTree = "<group>"; };
@@ -190,7 +188,6 @@
 				CC6E0DF41E70650E0012FE6A /* BackendAPIRequest.swift */,
 				CC6E0DF51E70650E0012FE6A /* BackendConfiguration.swift */,
 				CC6E0DF61E70650E0012FE6A /* BackendService.swift */,
-				461B7C901E80FA5A00398D16 /* BackendTokenConfiguration.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -411,7 +408,6 @@
 				CC6E0E3C1E7065CC0012FE6A /* EZAlertController.swift in Sources */,
 				CC6E0E0F1E70650E0012FE6A /* AuthKit.swift in Sources */,
 				CC6E0E201E70650E0012FE6A /* UIColorExtension.swift in Sources */,
-				461B7C911E80FA5A00398D16 /* BackendTokenConfiguration.swift in Sources */,
 				CC6E0E181E70650E0012FE6A /* ResponseData+ObjectMapper.swift in Sources */,
 				CC6E0E1F1E70650E0012FE6A /* BundleExtenstion.swift in Sources */,
 				CC6E0E171E70650E0012FE6A /* BackendService.swift in Sources */,

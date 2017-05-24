@@ -56,8 +56,15 @@ extension UIImage {
         return newImage!
     }
     
-    
-    public func tintPhoto(_ tintColor: UIColor) -> UIImage {
+    /**
+     Tint Photo to color
+     
+     - parameter tintColor: UIColor
+     - parameter mode: CGBlendMode (default: .color)
+     
+     - returns: UIImage
+     */
+    public func tintPhoto(_ tintColor: UIColor, mode: CGBlendMode = .color) -> UIImage {
         
         return modifiedImage { context, rect in
             // draw black background - workaround to preserve color of partially transparent pixels
@@ -70,7 +77,7 @@ extension UIImage {
             context.draw(self.cgImage!, in: rect)
             
             // tint image (loosing alpha) - the luminosity of the original image is preserved
-            context.setBlendMode(.color)
+            context.setBlendMode(mode)
             tintColor.setFill()
             context.fill(rect)
             
@@ -79,6 +86,7 @@ extension UIImage {
             context.draw(self.cgImage!, in: rect)
         }
     }
+    
     /**
      Tint Picto to color
      

@@ -33,19 +33,13 @@ public struct Configuration {
     }
     
     public func string(_ key: String) -> String {
-        let value: String? = self.configs[key] as? String
-        if (value == nil) {
-            return ""
-        }
-        return value!
+        let value = self.configs[key] as? String ?? ""
+        return value
     }
     
     public func integer(_ key: String) -> Int {
-        let value: Int? = self.configs[key] as? Int
-        if (value == nil) {
-            return 0
-        }
-        return value!
+        let value = self.configs[key] as? Int ?? 0
+        return value
     }
     
     //MARK: - Console errors

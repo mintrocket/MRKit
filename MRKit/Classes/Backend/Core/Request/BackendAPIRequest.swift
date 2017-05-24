@@ -48,6 +48,14 @@ protocol BackendAPIRequest {
     ///
     /// Default: false
     var commonParamsRequired: Bool { get }
+
+    /// Converter for processing the response, if the default converter for this request does inappropriate
+    /// from the configuration of BeckendService
+    ///
+    /// You need this, if API is shit
+    ///
+    /// Default: nil
+    var customResponseConverter: BackendResponseConverter? { get }
 }
 
 extension BackendAPIRequest {
@@ -63,7 +71,11 @@ extension BackendAPIRequest {
         return false
     }
     
-    var miltiPartData: [String : NetworkService.MultiPartData]? {
+    var multiPartData: [String : NetworkService.MultiPartData]? {
+        return nil
+    }
+
+    var customResponseConverter: BackendResponseConverter? {
         return nil
     }
 }
